@@ -16,7 +16,7 @@ import 'entities/entity_player.dart';
 class BagarreGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisionDetection {
   final Random random = Random();
 
-  final int fightDurationS;
+  final int? fightDurationS;
   final void Function(BagarreGame game)? onFightEnd;
 
   late final EntityPlayer playerA;
@@ -24,26 +24,16 @@ class BagarreGame extends FlameGame with HasKeyboardHandlerComponents, HasCollis
   late final DateTime fightStartDateTime;
 
   BagarreGame({
-    this.fightDurationS = 30,
+    this.fightDurationS,
     this.onFightEnd,
     List<PlayerDNA> dnas = const [],
   }) {
     if (dnas.isNotEmpty) {
-      playerA = AiControlledPlayer(
-        dna: dnas[0],
-        lookingDirection: Direction.right,
-      );
-      playerB = AiControlledPlayer(
-        dna: dnas[1],
-      );
+      playerA = AiControlledPlayer(dna: dnas[0], lookingDirection: Direction.right);
+      playerB = AiControlledPlayer(dna: dnas[1]);
     } else {
-      playerA = UserControlledPlayer(
-        name: 'Player A',
-        lookingDirection: Direction.right,
-      );
-      playerB = EntityPlayer(
-        name: 'Player B',
-      );
+      playerA = UserControlledPlayer(name: 'Player A', lookingDirection: Direction.right);
+      playerB = EntityPlayer(name: 'Player B', boxerSprite: 1);
     }
   }
 
@@ -77,7 +67,7 @@ class BagarreGame extends FlameGame with HasKeyboardHandlerComponents, HasCollis
 
   @override
   void update(double dt) {
-    if (fightElapsedTimeS >= fightDurationS) {
+    if (fightDurationS != null && fightElapsedTimeS >= fightDurationS!) {
       endFight();
     }
     super.update(dt);

@@ -1,22 +1,26 @@
+import 'package:bagarre/game/game.dart';
 import 'package:bagarre/models/generation.dart';
+import 'package:bagarre/res/overlays.dart';
+import 'package:bagarre/widgets/fight_overlay.dart';
 import 'package:bagarre/widgets/fights_grid.dart';
 import 'package:bagarre/widgets/iteration_mode_selector.dart';
 import 'package:bagarre/widgets/time_dilatation_selector.dart';
+import 'package:flame/game.dart';
 
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const GenerationsApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class GenerationsApp extends StatefulWidget {
+  const GenerationsApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<GenerationsApp> createState() => _GenerationsAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _GenerationsAppState extends State<GenerationsApp> {
   Generation _generation = Generation.initial();
   IterationMode _iterationMode = IterationMode.classic;
 
@@ -64,6 +68,35 @@ class _MyAppState extends State<MyApp> {
                 },
               );
             }
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class DemoApp extends StatelessWidget {
+  const DemoApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Bagarre',
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
+      ),
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Bagarre')),
+        body: GameWidget.controlled(
+          gameFactory: BagarreGame.new,
+          overlayBuilderMap: <String, OverlayWidgetBuilder<BagarreGame>>{
+            Overlays.fightOverlay: (context, game) => FightOverlay(game: game),
           },
         ),
       ),
